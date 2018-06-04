@@ -1,0 +1,28 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: costmatrix-service
+  labels:
+    k8s-app: costmatrix
+  # namespace: uchicago-edu
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    k8s-app: costmatrix
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cost_matrix_server  
+  labels:
+    k8s-app: costmatrix
+spec:
+  containers:
+  - name: cost_matrix_server
+    image: atlasanalyticsservice/costmatrix:latest
+    ports:
+      - containerPort: 8080
+  restartPolicy: Always
