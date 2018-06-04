@@ -1,0 +1,31 @@
+{
+  "name": "cost_matrix",
+  "version": "1.0.0",
+  "description": "receiving and delivering all network cost information",
+  "main": "cost.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon cost.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ATLAS-Analytics/CostMatrix.git"
+  },
+  "keywords": [
+    "network",
+    "cost"
+  ],
+  "author": "Ilija Vukotic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ATLAS-Analytics/CostMatrix/issues"
+  },
+  "homepage": "https://github.com/ATLAS-Analytics/CostMatrix#readme",
+  "devDependencies": {
+    "nodemon": "^1.17.5"
+  },
+  "dependencies": {
+    "elasticsearch": "^15.0.0",
+    "express": "^4.16.3"
+  }
+}
