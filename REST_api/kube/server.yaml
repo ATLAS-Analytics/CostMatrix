@@ -16,12 +16,12 @@ spec:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: cost_matrix_server  
+  name: cost-matrix-server  
   labels:
     k8s-app: costmatrix
 spec:
   containers:
-  - name: cost_matrix_server
+  - name: cost-matrix-server
     image: atlasanalyticsservice/costmatrix:latest
     ports:
       - containerPort: 8080

@@ -1,3 +1,5 @@
+.kube
+
 # Logs
 logs
 *.log
