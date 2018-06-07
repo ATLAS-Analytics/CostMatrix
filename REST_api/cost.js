@@ -86,7 +86,7 @@ app.post('/', (req, res) => {
         typeof req.query.time !== 'undefined' && req.query.time
     ) {
         client.index({
-            requestTimeout: 3000,
+            requestTimeout: 10000,
             index: 'cost_matrix',
             type: 'docs',
             id: req.query.source + '_' + req.query.destination,
@@ -94,7 +94,7 @@ app.post('/', (req, res) => {
                 "source": req.query.source,
                 "destination": req.query.destination,
                 "rate": req.query.rate,
-                "timestamp": req.query.time,
+                "timestamp": parseFloat(req.query.time),
                 "last": true
             }
         }).then(function (resp) {
@@ -104,15 +104,15 @@ app.post('/', (req, res) => {
         });
 
         client.index({
-            requestTimeout: 3000,
+            requestTimeout: 10000,
             index: 'cost_matrix',
             type: 'docs',
-            id: req.query.source + '_' + req.query.destination + '_' + req.query.time.toString(),
+            id: req.query.source + '_' + req.query.destination + '_' + req.query.time,
             body: {
                 "source": req.query.source,
                 "destination": req.query.destination,
                 "rate": req.query.rate,
-                "timestamp": req.query.time
+                "timestamp": parseFloat(req.query.time)
             }
         }).then(function (resp) {
             console.log("OK 2");
@@ -143,7 +143,7 @@ app.post('/error', (req, res) => {
         typeof req.query.time !== 'undefined' && req.query.time
     ) {
         client.index({
-            requestTimeout: 3000,
+            requestTimeout: 10000,
             index: 'cost_matrix',
             type: 'docs',
             id: req.query.source + '_' + req.query.destination,
@@ -151,7 +151,7 @@ app.post('/error', (req, res) => {
                 "source": req.query.source,
                 "destination": req.query.destination,
                 "log": req.query.log,
-                "timestamp": req.query.time,
+                "timestamp": parseFloat(req.query.time),
                 "last": true
             }
         }).then(function (resp) {
@@ -161,15 +161,15 @@ app.post('/error', (req, res) => {
         });
 
         client.index({
-            requestTimeout: 3000,
+            requestTimeout: 10000,
             index: 'cost_matrix',
             type: 'docs',
-            id: req.query.source + '_' + req.query.destination + '_' + req.query.time.toString(),
+            id: req.query.source + '_' + req.query.destination + '_' + req.query.time,
             body: {
                 "source": req.query.source,
                 "destination": req.query.destination,
                 "log": req.query.log,
-                "timestamp": req.query.time
+                "timestamp": parseFloat(req.query.time)
             }
         }).then(function (resp) {
             console.log("OK 2");
