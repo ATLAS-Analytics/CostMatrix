@@ -12,33 +12,21 @@ var client = new elasticsearch.Client({
     log: 'trace'
 });
 
-client.ping({
-    requestTimeout: 30000,
-}, function (error) {
-    if (error) {
-        console.error('elasticsearch cluster is down!');
-    } else {
-        console.log('All is well');
-    }
-});
-
-
-
-
-function indexLinkRate(source, destination, rate) {
-    client.index({
-        index: 'cost_matrix',
-        type: 'docs',
-        id: source + destination,
-        body: {
-            "source": source,
-            "destination": destination,
-            "rate": rate
-        }
-    }, function (err, resp, status) {
-        console.log(resp);
-    });
+function test_ES_connection() {
+    client.ping({
+        requestTimeout: 30000,
+    }).then(all_is_well, all_is_not_well);
 }
+
+function all_is_well(err, resp, stat) {
+    console.log('All is well');
+}
+
+function all_is_not_well(err, resp, stat) {
+    console.error('elasticsearch cluster is down!');
+    process.exit(1);
+}
+
 
 // App
 const app = express();
@@ -72,9 +60,10 @@ app.get('/', (req, res) => {
         }
     }).then(function (resp) {
         console.log(resp.hits.hits);
-        res.json(resp.hits.hits);
+        res.json(200, resp.hits.hits);
     }, function (err) {
-        console.trace(err.message);
+        console.trace(400, err.message);
+        res.status(500).send('could not get data. Error: ' + err.message)
     });
 
 
@@ -86,17 +75,113 @@ app.post('/', (req, res) => {
     console.log(req.query);
 
     if (req.query == 'undefined' || req.query == null) {
-        res.send('nothing POSTed.')
+        res.status(400).send('nothing POSTed.')
         return
     }
 
     if (
         typeof req.query.source !== 'undefined' && req.query.source &&
         typeof req.query.destination !== 'undefined' && req.query.destination &&
-        typeof req.query.rate !== 'undefined' && req.query.rate) {
-        res.send(indexLinkRate(req.query.source, req.query.destination, req.query.rate));
+        typeof req.query.rate !== 'undefined' && req.query.rate &&
+        typeof req.query.time !== 'undefined' && req.query.time
+    ) {
+        client.index({
+            requestTimeout: 3000,
+            index: 'cost_matrix',
+            type: 'docs',
+            id: req.query.source + '_' + req.query.destination,
+            body: {
+                "source": req.query.source,
+                "destination": req.query.destination,
+                "rate": req.query.rate,
+                "timestamp": req.query.time,
+                "last": true
+            }
+        }).then(function (resp) {
+            console.log("OK 1");
+        }, function (err) {
+            console.log(err.message);
+        });
+
+        client.index({
+            requestTimeout: 3000,
+            index: 'cost_matrix',
+            type: 'docs',
+            id: req.query.source + '_' + req.query.destination + '_' + req.query.time.toString(),
+            body: {
+                "source": req.query.source,
+                "destination": req.query.destination,
+                "rate": req.query.rate,
+                "timestamp": req.query.time
+            }
+        }).then(function (resp) {
+            console.log("OK 2");
+            res.status(200).send('Data indexed')
+        }, function (err) {
+            console.log(err.message);
+            res.status(500).send('could not index  data. Error: ' + err.message)
+        });
+
+    } else {
+        res.status(400).send('requires source, destination, rate and time.')
     }
-    // res.send('POST response\n');
+});
+
+app.post('/error', (req, res) => {
+    console.log('Got POST error request');
+    console.log(req.query);
+
+    if (req.query == 'undefined' || req.query == null) {
+        res.status(400).send('nothing POSTed.')
+        return
+    }
+
+    if (
+        typeof req.query.source !== 'undefined' && req.query.source &&
+        typeof req.query.destination !== 'undefined' && req.query.destination &&
+        typeof req.query.log !== 'undefined' && req.query.log &&
+        typeof req.query.time !== 'undefined' && req.query.time
+    ) {
+        client.index({
+            requestTimeout: 3000,
+            index: 'cost_matrix',
+            type: 'docs',
+            id: req.query.source + '_' + req.query.destination,
+            body: {
+                "source": req.query.source,
+                "destination": req.query.destination,
+                "log": req.query.log,
+                "timestamp": req.query.time,
+                "last": true
+            }
+        }).then(function (resp) {
+            console.log("OK 1");
+        }, function (err) {
+            console.log(err.message);
+        });
+
+        client.index({
+            requestTimeout: 3000,
+            index: 'cost_matrix',
+            type: 'docs',
+            id: req.query.source + '_' + req.query.destination + '_' + req.query.time.toString(),
+            body: {
+                "source": req.query.source,
+                "destination": req.query.destination,
+                "log": req.query.log,
+                "timestamp": req.query.time
+            }
+        }).then(function (resp) {
+            console.log("OK 2");
+            res.status(200).send('Log Data indexed')
+        }, function (err) {
+            console.log(err.message);
+            res.status(500).send('could not fully index log data. Error: ' + err.message)
+        });
+
+    } else {
+        res.status(400).send('requires source, destination, log and time.')
+    }
 });
 
 app.listen(PORT, HOST);
