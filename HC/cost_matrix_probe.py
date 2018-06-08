@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # it takes list of active xrootd doors from AGIS, copy a file from each of them
-# uploads MB/s results to UChicago costmatrix storage
+# uploads MiB/s results to UChicago costmatrix storage
 
 import subprocess
 import threading
@@ -10,7 +10,6 @@ import sys
 import random
 import math
 import logging
-import datetime
 import time
 
 import urllib
@@ -110,8 +109,7 @@ def upload(SITE_FROMLOG, SITE_TO):
         if retCode == '0':
             # print '--------------------------------- Uploading result ---------------------------------'
             # print rate
-            ts = datetime.datetime.utcnow()
-            ts = ts.replace(microsecond=0)
+            ts = int(round(time.time() * 1000))
             data = dict(source=SITE_FROM, destination=SITE_TO, rate=rate, time=ts)
             u = requests.post(server, params=data)
             print(u.text)
