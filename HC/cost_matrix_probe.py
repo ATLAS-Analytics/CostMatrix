@@ -117,7 +117,7 @@ def upload(SITE_FROMLOG, SITE_TO):
             print('non 0 exit code. uploading log.')
             # data = dict(source=SITE_FROM, destination=SITE_TO, log=','.join(lines), time=ts)
             data = dict(source=SITE_FROM, destination=SITE_TO, log=retCode, time=ts)
-            u = requests.post(server + 'error/', params=data)
+            u = requests.post(server + '/error/', params=data)
             print(u.text)
 
 
