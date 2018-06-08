@@ -80,7 +80,7 @@ class Command(object):
 def upload(SITE_FROMLOG, SITE_TO):
     SITE_FROM = SITE_FROMLOG.replace('.log', '')
 
-    print('Upload:', SITE_FROM, ' -> ', SITE_TO)
+    # print('Upload:', SITE_FROM, ' -> ', SITE_TO)
     if not os.path.isfile(SITE_FROMLOG):
         print("log file for site", site, "missing")
         return
@@ -109,14 +109,14 @@ def upload(SITE_FROMLOG, SITE_TO):
         ts = int(round(time.time() * 1000))
         if retCode == '0':
             # print '--------------------------------- Uploading result ---------------------------------'
-            # print rate
+            print('Upload:' + SITE_FROM, ' -> ' + SITE_TO, "rate:", rate)
             data = dict(source=SITE_FROM, destination=SITE_TO, rate=rate, time=ts)
             u = requests.post(server, params=data)
             print(u.text)
-
         else:
-            print('non 0 exit code. will not upload result. ')
-            data = dict(source=SITE_FROM, destination=SITE_TO, log=','.join(lines), time=ts)
+            print('non 0 exit code. uploading log.')
+            # data = dict(source=SITE_FROM, destination=SITE_TO, log=','.join(lines), time=ts)
+            data = dict(source=SITE_FROM, destination=SITE_TO, log=retCode, time=ts)
             u = requests.post(server, params=data)
             print(u.text)
 
@@ -234,9 +234,9 @@ def main():
             if ct > c.next:
                 if currParallel > maxParallel:
                     print('Already having', currParallel, "streams. Delaying start of", c.cn)
-                    continue
-                c.run(3600)
-                currParallel += 1
+                else:
+                    c.run(300)
+                    currParallel += 1
 
     print 'stopping.'
 
