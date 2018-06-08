@@ -106,10 +106,10 @@ def upload(SITE_FROMLOG, SITE_TO):
             if l.count('EXITSTATUS') > 0:
                 retCode = l.replace('EXITSTATUS=', '')
 
+        ts = int(round(time.time() * 1000))
         if retCode == '0':
             # print '--------------------------------- Uploading result ---------------------------------'
             # print rate
-            ts = int(round(time.time() * 1000))
             data = dict(source=SITE_FROM, destination=SITE_TO, rate=rate, time=ts)
             u = requests.post(server, params=data)
             print(u.text)
