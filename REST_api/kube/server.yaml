@@ -2,6 +2,8 @@ kind: Service
 apiVersion: v1
 metadata:
   name: costmatrix
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: costmatrix.slateci.net
   labels:
     k8s-app: costmatrix
   # namespace: uchicago-edu
