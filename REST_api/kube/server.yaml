@@ -10,8 +10,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 8080
-    targetPort: 8080
+  - port: 80
+    targetPort: 80
   # externalIPs:
   # - 192.170.227.230
   selector:
@@ -28,5 +28,5 @@ spec:
   - name: cost-matrix-server
     image: atlasanalyticsservice/costmatrix:latest
     ports:
-      - containerPort: 8080
+      - containerPort: 80
   restartPolicy: Always

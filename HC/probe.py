@@ -5,7 +5,7 @@ import json as simplejson
 
 ts = int(round(time.time() * 1000))
 
-server = 'http://costmatrix.slateci.net:8080/'
+server = 'http://costmatrix.slateci.net:80/'
 
 print('--------------------------------- Uploading result ---------------------------------')
 data = dict(source="SITE_FROM", destination="SITE_TO", rate=123.456, time=ts)

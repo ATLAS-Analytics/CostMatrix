@@ -19,7 +19,7 @@ import json as simplejson
 import requests
 from rucio.client import Client
 
-server = 'http://192.170.227.237:8080'
+server = 'http://costmatrix.slateci.net:80'
 
 
 class Replica:
