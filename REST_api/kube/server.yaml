@@ -29,4 +29,17 @@ spec:
     image: atlasanalyticsservice/costmatrix:latest
     ports:
       - containerPort: 80
+    livenessProbe:
+      httpGet:
+        # when "host" is not defined, "PodIP" will be used
+        # host: my-host
+        # when "scheme" is not defined, "HTTP" scheme will be used. Only "HTTP" and "HTTPS" are allowed
+        # scheme: HTTPS
+        path: /
+        port: 80
+        # httpHeaders:
+        # - name: X-Custom-Header
+        #   value: Awesome
+      initialDelaySeconds: 30
+      timeoutSeconds: 5
   restartPolicy: Always
