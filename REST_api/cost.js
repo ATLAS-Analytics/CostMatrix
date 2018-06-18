@@ -8,8 +8,8 @@ const express = require('express');
 console.log('CostMatrix RESTful API server starting on: ' + PORT);
 
 var client = new elasticsearch.Client({
-    host: 'atlas-kibana.mwt2.org:9200',
-    log: 'trace'
+    host: 'atlas-kibana.mwt2.org:9200'
+    // log: 'error' // trace, warning
 });
 
 function test_ES_connection() {
