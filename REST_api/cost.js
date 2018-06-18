@@ -71,8 +71,8 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', (req, res) => {
-    console.log('Got POST request');
-    console.log(req.query);
+    // console.log('Got POST request');
+    // console.log(req.query);
 
     if (req.query == 'undefined' || req.query == null) {
         res.status(400).send('nothing POSTed.')
@@ -98,9 +98,10 @@ app.post('/', (req, res) => {
                 "last": true
             }
         }).then(function (resp) {
-            console.log("OK 1");
+            // console.log("OK 1");
         }, function (err) {
             console.log(err.message);
+            console.log(req.query);
         });
 
         client.index({
@@ -115,10 +116,11 @@ app.post('/', (req, res) => {
                 "timestamp": parseFloat(req.query.time)
             }
         }).then(function (resp) {
-            console.log("OK 2");
+            // console.log("OK 2");
             res.status(200).send('Data indexed')
         }, function (err) {
             console.log(err.message);
+            console.log(req.query);
             res.status(500).send('could not index  data. Error: ' + err.message)
         });
 
@@ -128,8 +130,8 @@ app.post('/', (req, res) => {
 });
 
 app.post('/error', (req, res) => {
-    console.log('Got POST error request');
-    console.log(req.query);
+    // console.log('Got POST error request');
+    // console.log(req.query);
 
     if (req.query == 'undefined' || req.query == null) {
         res.status(400).send('nothing POSTed.')
@@ -155,7 +157,7 @@ app.post('/error', (req, res) => {
                 "last": true
             }
         }).then(function (resp) {
-            console.log("OK 1");
+            // console.log("OK 1");
         }, function (err) {
             console.log(err.message);
         });
@@ -172,10 +174,11 @@ app.post('/error', (req, res) => {
                 "timestamp": parseFloat(req.query.time)
             }
         }).then(function (resp) {
-            console.log("OK 2");
+            // console.log("OK 2");
             res.status(200).send('Log Data indexed')
         }, function (err) {
             console.log(err.message);
+            console.log(req.query);
             res.status(500).send('could not fully index log data. Error: ' + err.message)
         });
 
