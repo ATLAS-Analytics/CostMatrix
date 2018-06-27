@@ -95,6 +95,9 @@ app.get('/', (req, res) => {
             size: 9999,
             query: {
                 bool: {
+                    must: {
+                        term: { "last": false }
+                    },
                     should: [
                         { wildcard: { "source": source } },
                         { wildcard: { "destination": destination } }
