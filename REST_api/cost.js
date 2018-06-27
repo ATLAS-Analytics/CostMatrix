@@ -31,6 +31,49 @@ function all_is_not_well(err, resp, stat) {
 // App
 const app = express();
 
+app.get('/last', (req, res) => {
+    console.log('Got GET last request!');
+    console.log(req.query);
+
+    source = '*';
+    destination = '*';
+
+    if (typeof req.query.source !== 'undefined' && req.query.source) {
+        source = req.query.source;
+    }
+    if (typeof req.query.destination !== 'undefined' && req.query.destination) {
+        destination = req.query.destination;
+    }
+
+    client.search({
+        index: 'cost_matrix',
+        type: 'docs',
+        body: {
+            size: 9999,
+            query: {
+                bool: {
+                    must: {
+                        term: { "last": true }
+                    },
+                    should: [
+                        { wildcard: { "source": source } },
+                        { wildcard: { "destination": destination } }
+                    ]
+                }
+            }
+        }
+    }).then(function (resp) {
+        console.log(resp.hits.hits);
+        res.json(200, resp.hits.hits);
+    }, function (err) {
+        console.trace(400, err.message);
+        res.status(500).send('could not get data. Error: ' + err.message)
+    });
+
+
+
+});
+
 app.get('/', (req, res) => {
     console.log('Got GET request!');
     console.log(req.query);
@@ -49,6 +92,7 @@ app.get('/', (req, res) => {
         index: 'cost_matrix',
         type: 'docs',
         body: {
+            size: 9999,
             query: {
                 bool: {
                     should: [
