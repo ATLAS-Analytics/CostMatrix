@@ -96,7 +96,14 @@ app.get('/', (req, res) => {
             query: {
                 bool: {
                     must: {
-                        term: { "last": false }
+                        exists: {
+                            field: "rate"
+                        }
+                    },
+                    must_not: {
+                        exists: {
+                            field: "last"
+                        }
                     },
                     should: [
                         { wildcard: { "source": source } },
