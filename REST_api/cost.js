@@ -38,6 +38,7 @@ app.get('/last', (req, res) => {
     source = '*';
     destination = '*';
 
+
     if (typeof req.query.source !== 'undefined' && req.query.source) {
         source = req.query.source;
     }
@@ -52,10 +53,8 @@ app.get('/last', (req, res) => {
             size: 9999,
             query: {
                 bool: {
-                    must: {
-                        term: { "last": true }
-                    },
-                    should: [
+                    must: [
+                        { term: { "last": true } },
                         { wildcard: { "source": source } },
                         { wildcard: { "destination": destination } }
                     ]
@@ -95,20 +94,14 @@ app.get('/', (req, res) => {
             size: 9999,
             query: {
                 bool: {
-                    must: {
-                        exists: {
-                            field: "rate"
-                        }
-                    },
-                    must_not: {
-                        exists: {
-                            field: "last"
-                        }
-                    },
-                    should: [
+                    must: [
+                        { exists: { field: "rate" } },
                         { wildcard: { "source": source } },
                         { wildcard: { "destination": destination } }
-                    ]
+                    ],
+                    must_not: {
+                        exists: { field: "last" }
+                    }
                 }
             }
         }
