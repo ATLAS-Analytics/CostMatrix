@@ -2,11 +2,11 @@ kind: Service
 apiVersion: v1
 metadata:
   name: costmatrix
+  namespace: aaas
   annotations:
     external-dns.alpha.kubernetes.io/hostname: costmatrix.slateci.net
   labels:
     k8s-app: costmatrix
-  # namespace: uchicago-edu
 spec:
   type: LoadBalancer
   ports:
@@ -17,29 +17,39 @@ spec:
   selector:
     k8s-app: costmatrix
 ---
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: costmatrix  
+  name: costmatrix-deployment
+  namespace: aaas
   labels:
-    k8s-app: costmatrix
+    app: costmatrix
 spec:
-  containers:
-  - name: cost-matrix-server
-    image: atlasanalyticsservice/costmatrix:latest
-    ports:
-      - containerPort: 80
-    livenessProbe:
-      httpGet:
-        # when "host" is not defined, "PodIP" will be used
-        # host: my-host
-        # when "scheme" is not defined, "HTTP" scheme will be used. Only "HTTP" and "HTTPS" are allowed
-        # scheme: HTTPS
-        path: /
-        port: 80
-        # httpHeaders:
-        # - name: X-Custom-Header
-        #   value: Awesome
-      initialDelaySeconds: 30
-      timeoutSeconds: 5
-  restartPolicy: Always
+  replicas: 1
+  selector:
+    matchLabels:
+      app: costmatrix
+  template:
+    metadata:
+      labels:
+        app: costmatrix
+    spec:
+      containers:
+      - name: cost-matrix-server
+        image: atlasanalyticsservice/costmatrix:latest
+        ports:
+          - containerPort: 80
+        livenessProbe:
+          httpGet:
+            # when "host" is not defined, "PodIP" will be used
+            # host: my-host
+            # when "scheme" is not defined, "HTTP" scheme will be used. Only "HTTP" and "HTTPS" are allowed
+            # scheme: HTTPS
+            path: /
+            port: 80
+            # httpHeaders:
+            # - name: X-Custom-Header
+            #   value: Awesome
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
+      restartPolicy: Always
