@@ -63,7 +63,7 @@ app.get('/last', (req, res) => {
         }
     }).then(function (resp) {
         console.log(resp.hits.hits);
-        res.json(200, resp.hits.hits);
+        res.status(200).json(resp.hits.hits);
     }, function (err) {
         console.trace(400, err.message);
         res.status(500).send('could not get data. Error: ' + err.message)
@@ -107,7 +107,7 @@ app.get('/', (req, res) => {
         }
     }).then(function (resp) {
         console.log(resp.hits.hits);
-        res.json(200, resp.hits.hits);
+        res.status(200).json(resp.hits.hits);
     }, function (err) {
         console.trace(400, err.message);
         res.status(500).send('could not get data. Error: ' + err.message)

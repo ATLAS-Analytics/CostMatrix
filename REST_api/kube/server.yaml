@@ -6,16 +6,16 @@ metadata:
   annotations:
     external-dns.alpha.kubernetes.io/hostname: costmatrix.slateci.net
   labels:
-    k8s-app: costmatrix
+    app: costmatrix
 spec:
   type: LoadBalancer
   ports:
   - port: 80
     targetPort: 80
   # externalIPs:
-  # - 192.170.227.230
+  # - 192.170.227.235
   selector:
-    k8s-app: costmatrix
+    app: costmatrix
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -41,15 +41,11 @@ spec:
           - containerPort: 80
         livenessProbe:
           httpGet:
-            # when "host" is not defined, "PodIP" will be used
-            # host: my-host
-            # when "scheme" is not defined, "HTTP" scheme will be used. Only "HTTP" and "HTTPS" are allowed
-            # scheme: HTTPS
-            path: /
+            path: /last?source=MWT2&destination=AGLT2
             port: 80
             # httpHeaders:
             # - name: X-Custom-Header
-            #   value: Awesome
+            #   value: LivenessProbe
           initialDelaySeconds: 30
           timeoutSeconds: 5
       restartPolicy: Always
