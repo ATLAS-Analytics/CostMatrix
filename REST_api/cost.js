@@ -5,7 +5,7 @@ const HOST = '0.0.0.0';
 var elasticsearch = require('elasticsearch');
 const express = require('express');
 
-console.log('CostMatrix RESTful API server starting on: ' + PORT);
+console.info('CostMatrix RESTful API server starting on: ' + PORT);
 
 var client = new elasticsearch.Client({
     host: 'atlas-kibana.mwt2.org:9200'
@@ -19,7 +19,7 @@ function test_ES_connection() {
 }
 
 function all_is_well(err, resp, stat) {
-    console.log('All is well');
+    console.info('All is well');
 }
 
 function all_is_not_well(err, resp, stat) {
@@ -32,8 +32,8 @@ function all_is_not_well(err, resp, stat) {
 const app = express();
 
 app.get('/last', (req, res) => {
-    console.log('Got GET last request!');
-    console.log(req.query);
+    console.info('Got GET last request!');
+    console.debug(req.query);
 
     source = '*';
     destination = '*';
@@ -74,8 +74,8 @@ app.get('/last', (req, res) => {
 });
 
 app.get('/', (req, res) => {
-    console.log('Got GET request!');
-    console.log(req.query);
+    console.info('Got GET request!');
+    console.debug(req.query);
 
     source = '*';
     destination = '*';
@@ -106,7 +106,7 @@ app.get('/', (req, res) => {
             }
         }
     }).then(function (resp) {
-        console.log(resp.hits.hits);
+        console.info(resp.hits.hits);
         res.status(200).json(resp.hits.hits);
     }, function (err) {
         console.trace(400, err.message);
@@ -147,8 +147,8 @@ app.post('/', (req, res) => {
         }).then(function (resp) {
             // console.log("OK 1");
         }, function (err) {
-            console.log(err.message);
-            console.log(req.query);
+            console.error(err.message);
+            console.error(req.query);
         });
 
         client.index({
@@ -166,8 +166,8 @@ app.post('/', (req, res) => {
             // console.log("OK 2");
             res.status(200).send('Data indexed')
         }, function (err) {
-            console.log(err.message);
-            console.log(req.query);
+            console.error(err.message);
+            console.error(req.query);
             res.status(500).send('could not index  data. Error: ' + err.message)
         });
 
@@ -206,7 +206,7 @@ app.post('/error', (req, res) => {
         }).then(function (resp) {
             // console.log("OK 1");
         }, function (err) {
-            console.log(err.message);
+            console.error(err.message);
         });
 
         client.index({
@@ -224,8 +224,8 @@ app.post('/error', (req, res) => {
             // console.log("OK 2");
             res.status(200).send('Log Data indexed')
         }, function (err) {
-            console.log(err.message);
-            console.log(req.query);
+            console.error(err.message);
+            console.error(req.query);
             res.status(500).send('could not fully index log data. Error: ' + err.message)
         });
 
