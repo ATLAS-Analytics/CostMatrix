@@ -39,13 +39,13 @@ spec:
         image: atlasanalyticsservice/costmatrix:latest
         ports:
           - containerPort: 80
-        livenessProbe:
-          httpGet:
-            path: /last?source=MWT2&destination=AGLT2
-            port: 80
+        # livenessProbe:
+        #   httpGet:
+        #     path: /last?source=MWT2&destination=AGLT2
+        #     port: 80
             # httpHeaders:
             # - name: X-Custom-Header
             #   value: LivenessProbe
-          initialDelaySeconds: 30
-          timeoutSeconds: 5
+          # initialDelaySeconds: 30
+          # timeoutSeconds: 5
       restartPolicy: Always
